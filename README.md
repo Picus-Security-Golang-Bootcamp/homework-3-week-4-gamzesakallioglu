@@ -1,10 +1,9 @@
-# Homework 3 Week 4
+# BOOK ARCHIEVE
 
-- `Book` ve `Author` bilgileri bir dosyadan okunacak ve DB'ye kayıt edilecek.
-- `list`, `search`, `delete(soft-delete)`, `buy` gibi `os.Args` komutları yerine DB sorguları yazılacak. 
-- Bu 2 modelle alakalı GORM sorguları yazılacak.
-  - GetByID
-  - FindByName
-  - GetBooksWithAuthor
-  - GetAuthorWithBooks etc. (GORM dökümantasyondaki sorgu çeşitlerine bakılacak bu 2 modelde uygulanacak)
-  - (Sadece 4 sorgu değil olabildiğince sorgu yazıp kendinizi geliştirin. Bu size artı olarak dönüş olacaktır.)
+This app reads csv files and do database operations.         
+- You can insert datas into database        
+- You can search by name         
+- You can list the books of an author         
+- You can list the author of a book      
+- You can buy some amount of a book     
+- You can delete a book     
