@@ -33,12 +33,28 @@ func main() {
 		log.Fatal("cannot connect to postgres ", err)
 	}
 
+	authorRepo := repo.NewAuthorRepository(db)
+	authorRepo.Migrations()
+	authorRepo.InsertDatas(authorList)
+
 	bookRepo := repo.NewBookRepository(db)
 	bookRepo.Migrations()
 	bookRepo.InsertDatas(bookList)
 
-	authorRepo := repo.NewAuthorRepository(db)
-	authorRepo.Migrations()
-	authorRepo.InsertDatas(authorList)
+	books, err := bookRepo.GetBooksWithAuthor() // Books will be printed with the author
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, v := range *books {
+		fmt.Println(v.ToString())
+	}
+
+	authors, err := authorRepo.GetAuthorsWithBook() // Authors will be printed with their books
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, v := range *authors {
+		fmt.Println(v.ToString())
+	}
 
 }

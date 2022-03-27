@@ -41,10 +41,12 @@ func ReadBooksCsv(filename string) (entities.Books, error) {
 		totalPage, _ := strconv.Atoi(line[2])
 		totalStock, _ := strconv.Atoi(line[3])
 		price, _ := strconv.Atoi(line[4])
-		authorId, _ := strconv.Atoi(line[7])
+		authorId, _ := strconv.Atoi(line[8])
+
+		author := entities.Author{ID: authorId, Name: line[7]}
 
 		books = append(books, entities.Book{
-			Id:         id,
+			ID:         id,
 			Name:       line[1],
 			TotalPage:  totalPage,
 			TotalStock: totalStock,
@@ -52,6 +54,7 @@ func ReadBooksCsv(filename string) (entities.Books, error) {
 			StockCode:  line[5],
 			ISBN:       line[6],
 			AuthorId:   authorId,
+			Author:     author,
 		})
 	}
 	return books, nil
@@ -72,7 +75,7 @@ func ReadAuthorsCsv(filename string) (entities.Authors, error) {
 		id, _ := strconv.Atoi(line[0])
 
 		authors = append(authors, entities.Author{
-			Id:   id,
+			ID:   id,
 			Name: line[1],
 		})
 	}
