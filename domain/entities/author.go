@@ -8,7 +8,6 @@ import (
 
 type Author struct {
 	gorm.Model
-	ID    int    `gorm:"primaryKey,autoIncrement"`
 	Name  string `gorm:"varchar(150)"`
 	Books []Book
 }

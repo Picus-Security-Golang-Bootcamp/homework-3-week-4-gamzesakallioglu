@@ -8,7 +8,6 @@ import (
 
 type Book struct {
 	gorm.Model
-	ID         int    `gorm:"primaryKey,autoIncrement"`
 	Name       string `gorm:"varchar(150)"`
 	TotalPage  int
 	TotalStock int

@@ -26,12 +26,12 @@ func (a *AuthorRepository) Migrations() {
 // Checks if a data exists with the same ID, if not inserts it to the database
 func (a *AuthorRepository) InsertOneData(author entities.Author) error {
 	// error handling
-	err := a.db.Where(entities.Author{ID: author.ID}).Attrs(entities.Author{ID: author.ID, Name: author.Name}).FirstOrCreate(&author).Error
+	err := a.db.Where(entities.Author{Model: gorm.Model{ID: author.ID}}).Attrs(entities.Author{Model: gorm.Model{ID: author.ID}, Name: author.Name}).FirstOrCreate(&author).Error
 	if err != nil {
 		return err
 	}
 	//
-	a.db.Where(entities.Author{ID: author.ID}).Attrs(entities.Author{ID: author.ID, Name: author.Name}).FirstOrCreate(&author)
+
 	return nil
 }
 
@@ -42,15 +42,15 @@ func (a *AuthorRepository) InsertDatas(authors entities.Authors) {
 }
 
 // Returns the author with the given ID
-func (a *AuthorRepository) GetById(id int) (*entities.Author, error) {
+func (a *AuthorRepository) GetById(id uint) (*entities.Author, error) {
 	var author entities.Author
 	// error handling
-	err := a.db.Where(&entities.Author{ID: id}).First(&author).Error
+	err := a.db.Where(&entities.Author{Model: gorm.Model{ID: id}}).First(&author).Error
 	if err != nil {
 		return nil, err
 	}
 	//
-	a.db.Where(&entities.Author{ID: id}).First(&author)
+
 	return &author, nil
 }
 
@@ -63,7 +63,7 @@ func (a *AuthorRepository) GetAuthorsWithBook() (*entities.Authors, error) {
 		return nil, err
 	}
 	//
-	a.db.Preload("Books").Find(&authors)
+
 	return &authors, nil
 }
 

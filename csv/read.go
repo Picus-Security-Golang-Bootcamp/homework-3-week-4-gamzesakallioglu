@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	entities "github.com/gamze.sakallioglu/learningGo/homework-3-week-4-gamzesakallioglu/domain/entities"
+	"gorm.io/gorm"
 )
 
 func ReadCsv(filename string) ([][]string, error) {
@@ -43,10 +44,10 @@ func ReadBooksCsv(filename string) (entities.Books, error) {
 		price, _ := strconv.Atoi(line[4])
 		authorId, _ := strconv.Atoi(line[8])
 
-		author := entities.Author{ID: authorId, Name: line[7]}
+		author := entities.Author{Model: gorm.Model{ID: uint(authorId)}, Name: line[7]}
 
 		books = append(books, entities.Book{
-			ID:         id,
+			Model:      gorm.Model{ID: uint(id)},
 			Name:       line[1],
 			TotalPage:  totalPage,
 			TotalStock: totalStock,
@@ -75,8 +76,8 @@ func ReadAuthorsCsv(filename string) (entities.Authors, error) {
 		id, _ := strconv.Atoi(line[0])
 
 		authors = append(authors, entities.Author{
-			ID:   id,
-			Name: line[1],
+			Model: gorm.Model{ID: uint(id)},
+			Name:  line[1],
 		})
 	}
 	return authors, nil

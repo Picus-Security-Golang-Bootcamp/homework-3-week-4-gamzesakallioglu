@@ -24,16 +24,13 @@ func (b *BookRepository) Migrations() {
 // Checks db if a data exists with same ID, If not inserts it to database.
 func (b *BookRepository) InsertOneData(book entities.Book) error {
 	// error handling
-	err := b.db.Where(entities.Book{ID: book.ID, StockCode: book.StockCode}, entities.Author{ID: book.AuthorId}).
-		Attrs(entities.Book{ID: book.ID, Name: book.Name, TotalPage: book.TotalPage, TotalStock: book.TotalStock, Price: book.Price, StockCode: book.StockCode, ISBN: book.ISBN, AuthorId: book.AuthorId}).
+	err := b.db.Where(entities.Book{Model: gorm.Model{ID: book.ID}, StockCode: book.StockCode}, entities.Author{Model: gorm.Model{ID: uint(book.AuthorId)}}).
+		Attrs(entities.Book{Model: gorm.Model{ID: book.ID}, Name: book.Name, TotalPage: book.TotalPage, TotalStock: book.TotalStock, Price: book.Price, StockCode: book.StockCode, ISBN: book.ISBN, AuthorId: book.AuthorId}).
 		FirstOrCreate(&book).Error
 	if err != nil {
 		return err
 	}
 	//
-	b.db.Where(entities.Book{ID: book.ID, StockCode: book.StockCode}, entities.Author{ID: book.AuthorId}).
-		Attrs(entities.Book{ID: book.ID, Name: book.Name, TotalPage: book.TotalPage, TotalStock: book.TotalStock, Price: book.Price, StockCode: book.StockCode, ISBN: book.ISBN, AuthorId: book.AuthorId}).
-		FirstOrCreate(&book)
 	return nil
 }
 
@@ -45,15 +42,14 @@ func (b *BookRepository) InsertDatas(books entities.Books) {
 }
 
 // GetById returns the book with the id that passed
-func (b *BookRepository) GetById(id int) (*entities.Book, error) {
+func (b *BookRepository) GetById(id uint) (*entities.Book, error) {
 	var book entities.Book
 	// error handling
-	err := b.db.Where(&entities.Book{ID: id}).Preload("Author").First(&book).Error
+	err := b.db.Where(&entities.Book{Model: gorm.Model{ID: id}}).Preload("Author").First(&book).Error
 	if err != nil {
 		return nil, err
 	}
 	//
-	b.db.Where(&entities.Book{ID: id}).Preload("Author").First(&book)
 	return &book, nil
 }
 
@@ -66,7 +62,6 @@ func (b *BookRepository) GetBooksWithAuthor() (*entities.Books, error) {
 		return nil, err
 	}
 	//
-	b.db.Preload("Author").Find(&books)
 	return &books, nil
 }
 
@@ -80,7 +75,7 @@ func (b *BookRepository) FindByName(name string) (entities.Books, error) {
 		return nil, err
 	}
 	//
-	b.db.Where("name LIKE ?", name).Find(&books)
+
 	return books, nil
 }
 
@@ -94,7 +89,7 @@ func (b *BookRepository) FindStartsWithName(name string) (*entities.Books, error
 		return nil, err
 	}
 	//
-	b.db.Where("name LIKE ?", name).Find(&books)
+
 	return &books, nil
 }
 
@@ -108,7 +103,7 @@ func (b *BookRepository) FindEndsWithName(name string) (*entities.Books, error) 
 		return nil, err
 	}
 	//
-	b.db.Where("name LIKE ?", name).Find(&books)
+
 	return &books, nil
 }
 
@@ -122,12 +117,12 @@ func (b *BookRepository) getBooksByAuthorId(id int) (*entities.Books, error) {
 		return nil, err
 	}
 	//
-	b.db.Where(&entities.Book{AuthorId: id}).Find(&books)
+
 	return &books, err
 }
 
 // Buy the book with given ID with given amount
-func (b *BookRepository) BuyBook(id int, quantity int) error {
+func (b *BookRepository) BuyBook(id uint, quantity int) error {
 	book, _ := b.GetById(id)
 	// old total stock of the book
 	var bookStock = book.TotalStock
@@ -150,25 +145,25 @@ func (b *BookRepository) BuyBook(id int, quantity int) error {
 }
 
 // Updates the stock of the book data with given ID
-func (b *BookRepository) updateStock(id, stock int) error {
+func (b *BookRepository) updateStock(id uint, stock int) error {
 	// error handling
 	err := b.db.Model(&entities.Book{}).Where("Id = ?", id).Update("total_stock", stock).Error
 	if err != nil {
 		return err
 	}
 	//
-	b.db.Model(&entities.Book{}).Where("Id = ?", id).Update("total_stock", stock)
+
 	return nil
 }
 
 // soft delete - change deleted_at as now rather than actual delete
-func (b *BookRepository) DeleteById(bookId int) error {
+func (b *BookRepository) DeleteById(bookId uint) error {
 	// error handling
 	err := b.db.Model(&entities.Book{}).Where("Id = ?", bookId).Update("deleted_at", time.Now()).Error
 	if err != nil {
 		return err
 	}
 	//
-	b.db.Model(&entities.Book{}).Where("Id = ?", bookId).Update("deleted_at", time.Now())
+
 	return nil
 }
